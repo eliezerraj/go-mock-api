@@ -1,0 +1,8 @@
+app:
+  profile: "development"
+  name: "API-MOCK"
+  description: "API mock for test"
+  version: "1.0"
+
+server:
+  port: 8900
