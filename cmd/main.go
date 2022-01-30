@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-mock-api/internal/config"
+	"github.com/go-mock-api/internal/configs"
 	"github.com/go-mock-api/internal/viper"
 
 )
 
 func main(){
 	fmt.Println("teste")
-	config.LoggerConfiguration()
+	configs.LoggerConfiguration()
 	viper.Configuration()
-	config.ServerConfiguration(time.Now())
+	configs.ServerConfiguration(time.Now())
 }

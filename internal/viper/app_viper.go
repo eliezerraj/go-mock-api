@@ -13,6 +13,7 @@ import (
 var (
 	// Application TODO: refactor here
 	Application model.Application
+	Viper *viper.Viper
 )
 
 const (

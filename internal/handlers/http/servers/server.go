@@ -1,4 +1,4 @@
-package http_server
+package http_servers
 
 import (
 	"time"
@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-mock-api/internal/utils/loggers"
 	"github.com/go-mock-api/internal/utils/constants"
-	"github.com/go-mock-api/internal/handlers/http_server/routers"
+	"github.com/go-mock-api/internal/handlers/http/routers"
 	"github.com/go-mock-api/internal/viper"
 
 )
