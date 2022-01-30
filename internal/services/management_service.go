@@ -33,13 +33,13 @@ func CheckHealth() model.ManagerHealth {
 }
 
 func healthDB() (model.ManagerHealthDB, bool) {
-	statusDB := "OK..."
+	statusDB := constants.NO_DEPLOY
 
 	m := model.ManagerHealthDB{
 		Status: statusDB,
 	}
 
-	return m, statusDB == constants.UP
+	return m, true
 }
 
 func healthDiskUsage() (model.ManagerHealthDiskSpace, bool) {

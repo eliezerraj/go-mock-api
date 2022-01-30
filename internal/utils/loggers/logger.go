@@ -1,12 +1,20 @@
 package loggers
 
 import (
-	"fmt"
+	"time"
+	"bytes"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
 )
+
+type LogContext struct {
+	Created    time.Time
+	Log        bytes.Buffer
+	Logger     zap.Logger
+	StackTrace interface{}
+}
 
 var logLevel = map[string]zapcore.Level{
 	"DEBUG":         zap.DebugLevel,
@@ -21,7 +29,6 @@ var logLevel = map[string]zapcore.Level{
 var logger *zap.Logger
 
 func Init(){
-	fmt.Println("logeeee eeeeeee")
 	var err error
 	config := zap.NewProductionConfig()
 	config.EncoderConfig.TimeKey = "timestamp"

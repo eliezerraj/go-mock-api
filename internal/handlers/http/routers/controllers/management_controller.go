@@ -18,12 +18,10 @@ type Management struct {
 	responseHandlers handlers.ResponseHandler
 }
 
-func NewManagementController(
-							requestHandlers handlers.RequestHandlers,
+func NewManagementController(requestHandlers handlers.RequestHandlers,
 							responseHandlers handlers.ResponseHandler) Management {
-	return Management{
-		requestHandlers:  requestHandlers,
-		responseHandlers: responseHandlers,
+	return Management{	requestHandlers:  requestHandlers,
+						responseHandlers: responseHandlers,
 	}
 }
 
@@ -48,10 +46,9 @@ func (m Management) checkHealth(w http.ResponseWriter, _ *http.Request) {
 func (m Management) getInfo(w http.ResponseWriter, _ *http.Request) {
 	git := model.ManagerInfoResponse{
 		App: &model.ManagerInfoResponseApp{
-			Profile:     viper.Viper.GetString("app.profile"),
-			Name:        viper.Viper.GetString("app.name"),
-			Description: viper.Viper.GetString("app.description"),
-			Version:     viper.Viper.GetString("app.version"),
+			Name:        viper.Application.App.Name,
+			Description: viper.Application.App.Description,
+			Version:     viper.Application.App.Version,
 		},
 	}
 	m.responseHandlers.Ok(w, git)

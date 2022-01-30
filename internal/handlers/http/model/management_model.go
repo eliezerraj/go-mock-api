@@ -5,10 +5,9 @@ type ManagerInfoResponse struct {
 }
 
 type ManagerInfoResponseApp struct {
-	Profile string `json:"profile"`
-	Name string `json:"name"`
-	Description string `json:"description"`
-	Version string `json:"version"`
+	Name 				string `json:"name"`
+	Description 		string `json:"description"`
+	Version 			string `json:"version"`
 }
 
 type ManagerHealthDiskSpace struct {
