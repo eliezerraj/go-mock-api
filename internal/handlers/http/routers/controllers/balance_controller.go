@@ -5,11 +5,9 @@ import (
 
 	"github.com/go-chi/chi"
 
-	//"github.com/go-mock-api/internal/viper"
 	"github.com/go-mock-api/internal/utils/constants"
 	"github.com/go-mock-api/internal/handlers/http/handlers"
-	//"github.com/go-mock-api/internal/handlers/http/model"
-//	model_core "github.com/go-mock-api/internal/core/model"
+	"github.com/go-mock-api/internal/core/model"
 	"github.com/go-mock-api/internal/services"
 
 )
@@ -35,19 +33,48 @@ func (b Balance) GetPath() string {
 
 func (b Balance) Route(r chi.Router) {
 	r.Get("/list", b.listBalance)
+	r.Post("/save", b.saveBalance)
 }
 
 func (b Balance) listBalance(w http.ResponseWriter, r *http.Request) {
+	result, err := b.service.List(r.Context())
+	if err != nil {
+		b.responseHandlers.Exception(w, r, err)
+		return
+	}
+	b.responseHandlers.Ok(w, ToBalanceListResponse(result))
+}
 
-//	result := []model_core.Balance{}
-//	m1 := model_core.Balance{ Id: "001"}
-//	result = append(result, m1)
-	
-	result2, err := b.service.List(r.Context())
+func (b Balance) saveBalance(w http.ResponseWriter, r *http.Request) {
+	var balance model.Balance
+	err := b.requestHandlers.BindJson(r, &balance)
 	if err != nil {
 		b.responseHandlers.Exception(w, r, err)
 		return
 	}
 
-	b.responseHandlers.Ok(w, result2)
+	result, err := b.service.Save(r.Context(), balance)
+	if err != nil {
+			b.responseHandlers.Exception(w, r, err)
+			return
+	}
+		b.responseHandlers.Ok(w, ToBalanceResponse(result))
+}
+//-----------------------
+func ToBalanceListResponse(t []model.Balance) []model.Balance {
+	list := make([]model.Balance, 0)
+	for _, v := range t {
+		list = append(list, ToBalanceResponse(v))
+	}
+	return list
+}
+
+func ToBalanceResponse(b model.Balance) model.Balance {
+	return model.Balance{
+		Id:        	b.Id,
+		Account: 	b.Account,
+		Amount: 	b.Amount,
+		DateBalance: b.DateBalance,
+		Description: b.Description ,
+	}
 }

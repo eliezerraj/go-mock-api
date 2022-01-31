@@ -4,11 +4,13 @@ import (
 	"net/http"
 	"encoding/json"
 	"sync"
+	"strconv"
 
 	"github.com/go-mock-api/internal/exceptions"
 	"github.com/go-mock-api/internal/utils"
 	"github.com/go-mock-api/internal/utils/loggers"
 	"github.com/go-mock-api/internal/utils/constants"
+	"github.com/go-mock-api/internal/core/model"
 
 )
 
@@ -54,15 +56,21 @@ func (h ResponseHandlerImpl) Exception(w http.ResponseWriter, r *http.Request, e
 		utils.AddToContext(r.Context(), constants.LogContext, &logContext)
 	} else {
 		loggers.GetLogger().Warn("Invalid context founded")
+		
 	}
 
-//	var requestId string
-//	ctxRequest, ctxValid := utils.FindToContext(r.Context(), constants.ContextRequest).(base.ContextRequest)
-//	if !ctxValid {
-//		loggers.GetLogger().Warn("Invalid context founded")
-//	} 
+	var requestId string
+	ctxRequest, ctxValid := utils.FindToContext(r.Context(), constants.ContextRequest).(model.ContextRequest)
+	if !ctxValid {
+		loggers.GetLogger().Warn("Invalid context founded")
+	} else {
+		issuerId := ctxRequest.IssuerID
+		requestId = ctxRequest.RequestId
+		w.Header().Add("issuer_id", strconv.Itoa(int(issuerId)))
+		w.Header().Add("request_id", requestId)
+	}
 
-	resp := exceptions.NewErrorResponse("requestId", httpError.Exception.Error(), httpError.Code)
+	resp := exceptions.NewErrorResponse(requestId, httpError.Exception.Error(), httpError.Code)
 	response(w, resp, httpError.HttpStatusCode)
 }
 

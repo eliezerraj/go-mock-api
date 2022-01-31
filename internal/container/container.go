@@ -4,9 +4,10 @@ import (
 	"sync"
 
 	"github.com/go-mock-api/internal/services"
+	"github.com/go-mock-api/internal/adapters/repository"
+//	"github.com/go-mock-api/internal/adapters/repository/memkv"
 
 )
-
 
 var container *ServiceContainer
 var once sync.Once
@@ -17,7 +18,10 @@ type ServiceContainer struct {
 }
 
 func Container() *ServiceContainer {
+	
 	once.Do(func() {
+		//db := tenants.NewDatabaseHelper()
+
 		container = &ServiceContainer{
 			//LogManager:  nil,
 			BalanceService:  newBalanceService(),
@@ -27,6 +31,8 @@ func Container() *ServiceContainer {
 }
 
 func newBalanceService() services.BalanceService {
-	//travelRepository := repository.NewTravelsRepository(dbh)
-	return services.NewBalanceService()
+	//balanceRepository_memkv := memkv.NewBalanceRepositoryMemKv()
+	//fmt.Println(balanceRepository_memkv)
+	balanceRepository := repository.NewBalanceRepository()
+	return services.NewBalanceService(balanceRepository)
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/go-mock-api/internal/viper"
 	"github.com/go-mock-api/internal/utils/constants"
 	"github.com/go-mock-api/internal/handlers/http/handlers"
-	"github.com/go-mock-api/internal/handlers/http/model"
+	"github.com/go-mock-api/internal/core/model"
 	"github.com/go-mock-api/internal/services"
 
 )
@@ -35,21 +35,44 @@ func (m Management) Route(r chi.Router) {
 }
 
 func (m Management) checkHealth(w http.ResponseWriter, _ *http.Request) {
-	resp := services.CheckHealth()
-	if resp.Status != constants.UP {
-		m.responseHandlers.InternalServerError(w, resp)
+	result := services.CheckHealth()
+	if result.Status != constants.UP {
+		m.responseHandlers.InternalServerError(w, result)
 		return
 	}
-	m.responseHandlers.Ok(w, resp)
+	m.responseHandlers.Ok(w, ToManagerHealthResponse(result))
 }
 
 func (m Management) getInfo(w http.ResponseWriter, _ *http.Request) {
-	git := model.ManagerInfoResponse{
-		App: &model.ManagerInfoResponseApp{
+	result := model.ManagerInfo{
+		App: &model.ManagerInfoApp{
 			Name:        viper.Application.App.Name,
 			Description: viper.Application.App.Description,
 			Version:     viper.Application.App.Version,
 		},
 	}
-	m.responseHandlers.Ok(w, git)
+	m.responseHandlers.Ok(w, result)
+}
+//-----------------------------
+func ToManagerHealthDBResponse(m model.ManagerHealthDB) model.ManagerHealthDB {
+	return model.ManagerHealthDB{
+		Status:        	m.Status,
+	}
+}
+
+func ToManagerHealthDiskSpaceResponse(m model.ManagerHealthDiskSpace) model.ManagerHealthDiskSpace {
+	return model.ManagerHealthDiskSpace{
+		Status:        	m.Status,
+		Total:			m.Total,
+		Free:			m.Free,
+		Threshold:		m.Threshold,
+	}
+}
+
+func ToManagerHealthResponse(m model.ManagerHealth) model.ManagerHealth {
+	return model.ManagerHealth{
+		Status:        	m.Status,
+		DB:				ToManagerHealthDBResponse(m.DB),
+		DiskSpace:		ToManagerHealthDiskSpaceResponse(m.DiskSpace),
+	}
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/ricochet2200/go-disk-usage/du"
 
 	"github.com/go-mock-api/internal/utils/constants"
-	"github.com/go-mock-api/internal/handlers/http/model"
+	"github.com/go-mock-api/internal/core/model"
 
 )
 

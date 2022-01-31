@@ -49,11 +49,19 @@ const (
 )
 
 var (
-	ErrInternalServerError = Exception(errors.New("an internal error has occurred, contact the SRE team"))
+	ErrInternalServerError = Exception(errors.New("ERROR => an internal error has occurred, contact the SRE team"))
+	ErrList                = Exception(errors.New("ERROR => could not get any data from database"))
+	ErrSave                = Exception(errors.New("ERROR => could not insert data from database"))
+	ErrJsonDecode          = Exception(errors.New("ERROR => could not convert data to json"))
 )
 
 var httpErrorList = [...]HttpError{
 
+}
+
+func Throw(old error, new error) error {
+	new = fmt.Errorf("Error: %w", old)
+	return new
 }
 
 func IsValidationError(err error) (bool, *HttpError) {

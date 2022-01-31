@@ -1,10 +1,10 @@
 package model
 
-type ManagerInfoResponse struct {
-	App *ManagerInfoResponseApp `json:"app"`
+type ManagerInfo struct {
+	App *ManagerInfoApp `json:"app"`
 }
 
-type ManagerInfoResponseApp struct {
+type ManagerInfoApp struct {
 	Name 				string `json:"name"`
 	Description 		string `json:"description"`
 	Version 			string `json:"version"`
