@@ -33,6 +33,7 @@ func NewBalanceRepositoryMemKv() BalanceRepositoryMemKv {
 }
 
 func (b BalanceRepositoryMemKvImpl) Save(ctx context.Context, balance model.Balance) (model.Balance, error) {
+	loggers.GetLogger().Named(constants.Database).Info("Save") 
 	mutex.Lock()
 	defer mutex.Unlock()
 
@@ -47,6 +48,7 @@ func (b BalanceRepositoryMemKvImpl) Save(ctx context.Context, balance model.Bala
 }
 
 func (b BalanceRepositoryMemKvImpl) List(ctx context.Context) ([]model.Balance, error) {
+	loggers.GetLogger().Named(constants.Database).Info("List") 
 	var result []model.Balance
 	for _, value := range b.kv {
 		balance := model.Balance{}
@@ -56,10 +58,11 @@ func (b BalanceRepositoryMemKvImpl) List(ctx context.Context) ([]model.Balance, 
 		}
 		result = append(result, balance)
 	}
-	return result ,nil
+	return result, nil
 }
 
 func (b BalanceRepositoryMemKvImpl) FindById(ctx context.Context, id string) (model.Balance, error) {
+	loggers.GetLogger().Named(constants.Database).Info("FindById") 
 	if value, ok := b.kv[id]; ok {
 		balance := model.Balance{}
 		err := json.Unmarshal(value, &balance)
@@ -68,5 +71,5 @@ func (b BalanceRepositoryMemKvImpl) FindById(ctx context.Context, id string) (mo
 		}
 		return balance, nil
 	}
-	return model.Balance{}, exceptions.Throw(nil, exceptions.ErrNoDataFound)
+	return model.Balance{}, exceptions.Throw( exceptions.ErrNoDataFound, exceptions.ErrNoDataFound)
 }

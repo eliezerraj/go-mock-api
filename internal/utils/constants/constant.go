@@ -5,6 +5,8 @@ const (
 	Viper           = "[VIPER]"
 	Router          = "[ROUTER]"
 	Database        = "[DATABASE]"
+	ServiceBalance  = "[SERVICE]"
+	Controller  	= "[CONTROLLER]"
 	
 	UP              = "UP"
 	DOWN            = "DOWN"

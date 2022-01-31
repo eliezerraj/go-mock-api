@@ -8,8 +8,8 @@ import(
 )
 
 const (
-	Prefix                  = "ERRO-001"
-	InternalServerErrorCode  = Prefix + "-500"
+	Prefix            = "SYSTEM-XPTO"
+	SystemErrorCode  = Prefix + "-999"
 )
 
 type ErrorResponse struct {
@@ -59,11 +59,17 @@ var (
 )
 
 var httpErrorList = [...]HttpError{
-
+	{Exception: ErrInternalServerError, HttpStatusCode: 500, Code: SystemErrorCode},
+	{Exception: ErrList, HttpStatusCode: 400, Code: SystemErrorCode},
+	{Exception: ErrSave, HttpStatusCode: 400, Code: SystemErrorCode},
+	{Exception: ErrJsonDecode, HttpStatusCode: 500, Code: SystemErrorCode},
+	{Exception: ErrJsonCode, HttpStatusCode: 500, Code: SystemErrorCode},
+	{Exception: ErrSaveDatabase, HttpStatusCode: 500, Code: SystemErrorCode},
+	{Exception: ErrNoDataFound, HttpStatusCode: 404, Code: SystemErrorCode},
 }
 
 func Throw(old error, new error) error {
-	new = fmt.Errorf("Error: %w", old)
+	new = fmt.Errorf("%w", old)
 	return new
 }
 
@@ -84,7 +90,6 @@ func GetHttpError(err error) HttpError {
 	if ok, httpError := IsValidationError(err); ok {
 		return *httpError
 	}
-
 	aux := strings.Split(err.Error(), ":")[0]
 	for _, e := range httpErrorList {
 		if e.Exception.Error() == aux {

@@ -9,6 +9,7 @@ import (
 	"github.com/go-mock-api/internal/handlers/http/handlers"
 	"github.com/go-mock-api/internal/core/model"
 	"github.com/go-mock-api/internal/services"
+	"github.com/go-mock-api/internal/utils/loggers"
 
 )
 
@@ -40,6 +41,7 @@ func (b Balance) Route(r chi.Router) {
 }
 
 func (b Balance) listBalance(w http.ResponseWriter, r *http.Request) {
+	loggers.GetLogger().Named(constants.Controller).Info("listBalance") 
 	result, err := b.service.List(r.Context())
 	if err != nil {
 		b.responseHandlers.Exception(w, r, err)
@@ -49,6 +51,7 @@ func (b Balance) listBalance(w http.ResponseWriter, r *http.Request) {
 }
 
 func (b Balance) saveBalance(w http.ResponseWriter, r *http.Request) {
+	loggers.GetLogger().Named(constants.Controller).Info("saveBalance") 
 	var balance model.Balance
 	err := b.requestHandlers.BindJson(r, &balance)
 	if err != nil {
@@ -65,9 +68,11 @@ func (b Balance) saveBalance(w http.ResponseWriter, r *http.Request) {
 }
 
 func (b Balance) findById(w http.ResponseWriter, r *http.Request) {
+	loggers.GetLogger().Named(constants.Controller).Info("findById") 
 	id := b.requestHandlers.GetURLParam(r, constants.PathParamDefault)
 
 	result, err := b.service.FindById(r.Context(), id)
+	
 	if err != nil {
 		b.responseHandlers.Exception(w, r, err)
 		return
