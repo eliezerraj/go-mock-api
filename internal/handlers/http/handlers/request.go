@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/go-chi/render"
+	"github.com/go-chi/chi"
 
 	"github.com/go-mock-api/internal/exceptions"
 
@@ -20,6 +21,7 @@ type RequestHandlersImpl struct{}
 
 type RequestHandlers interface {
 	BindJson(r *http.Request, destination interface{}) error
+	GetURLParam(r *http.Request, key string) string
 }
 
 func NewRequestHandlers() RequestHandlers {
@@ -39,6 +41,10 @@ func (h RequestHandlersImpl) BindJson(r *http.Request, destination interface{}) 
 		return exceptions.Throw(e, exceptions.ErrJsonDecode)
 	}
 	return h.validateJsonFields(destination)
+}
+
+func (h RequestHandlersImpl) GetURLParam(r *http.Request, key string) string {
+	return chi.URLParam(r, key)
 }
 
 func (h RequestHandlersImpl) validateJsonFields(input interface{}) error {

@@ -4,8 +4,7 @@ import (
 	"sync"
 
 	"github.com/go-mock-api/internal/services"
-	"github.com/go-mock-api/internal/adapters/repository"
-//	"github.com/go-mock-api/internal/adapters/repository/memkv"
+	"github.com/go-mock-api/internal/adapters/repository/memkv"
 
 )
 
@@ -31,8 +30,6 @@ func Container() *ServiceContainer {
 }
 
 func newBalanceService() services.BalanceService {
-	//balanceRepository_memkv := memkv.NewBalanceRepositoryMemKv()
-	//fmt.Println(balanceRepository_memkv)
-	balanceRepository := repository.NewBalanceRepository()
-	return services.NewBalanceService(balanceRepository)
+	balanceRepository_memkv := memkv.NewBalanceRepositoryMemKv()
+	return services.NewBalanceService(balanceRepository_memkv)
 }

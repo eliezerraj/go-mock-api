@@ -34,6 +34,9 @@ func (b Balance) GetPath() string {
 func (b Balance) Route(r chi.Router) {
 	r.Get("/list", b.listBalance)
 	r.Post("/save", b.saveBalance)
+	r.Route("/id={id}", func(rRouter chi.Router) {
+		rRouter.Get("/", b.findById)
+	})
 }
 
 func (b Balance) listBalance(w http.ResponseWriter, r *http.Request) {
@@ -60,6 +63,18 @@ func (b Balance) saveBalance(w http.ResponseWriter, r *http.Request) {
 	}
 		b.responseHandlers.Ok(w, ToBalanceResponse(result))
 }
+
+func (b Balance) findById(w http.ResponseWriter, r *http.Request) {
+	id := b.requestHandlers.GetURLParam(r, constants.PathParamDefault)
+
+	result, err := b.service.FindById(r.Context(), id)
+	if err != nil {
+		b.responseHandlers.Exception(w, r, err)
+		return
+	}
+	b.responseHandlers.Ok(w, ToBalanceResponse(result))
+}
+
 //-----------------------
 func ToBalanceListResponse(t []model.Balance) []model.Balance {
 	list := make([]model.Balance, 0)

@@ -12,6 +12,7 @@ import (
 type BalanceService interface {
 	List(ctx context.Context) ([]model.Balance, error)
 	Save(ctx context.Context, balance model.Balance) (model.Balance, error)
+	FindById(ctx context.Context, id string) (model.Balance, error)
 }
 
 type BalanceServiceImpl struct {
@@ -36,6 +37,14 @@ func (t BalanceServiceImpl) Save(ctx context.Context, balance model.Balance) (mo
 	result, err := t.repository.Save(ctx, balance)
 	if err != nil {
 		return model.Balance{} , exceptions.Throw(err, exceptions.ErrSave)
+	}
+	return result, nil
+}
+
+func (t BalanceServiceImpl) FindById(ctx context.Context, id string) (model.Balance, error) {
+	result, err := t.repository.FindById(ctx, id)
+	if err != nil {
+		return model.Balance{} , exceptions.Throw(err, exceptions.ErrNoDataFound)
 	}
 	return result, nil
 }

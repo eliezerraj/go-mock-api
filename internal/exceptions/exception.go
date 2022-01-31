@@ -53,6 +53,9 @@ var (
 	ErrList                = Exception(errors.New("ERROR => could not get any data from database"))
 	ErrSave                = Exception(errors.New("ERROR => could not insert data from database"))
 	ErrJsonDecode          = Exception(errors.New("ERROR => could not convert data to json"))
+	ErrJsonCode            = Exception(errors.New("ERROR => could not convert json to data"))
+	ErrSaveDatabase 	   = Exception(errors.New("ERROR => could not save data to database"))
+	ErrNoDataFound 		   = Exception(errors.New("ERROR => no data found with parameters informed"))
 )
 
 var httpErrorList = [...]HttpError{

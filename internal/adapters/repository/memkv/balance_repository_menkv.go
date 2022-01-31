@@ -1,39 +1,72 @@
 package memkv
 
 import (
-	//"sync"
+	"sync"
 	"context"
-	"fmt"
+	//"fmt"
+	"encoding/json"
 
+	"go.uber.org/zap"
+
+	"github.com/go-mock-api/internal/utils/constants"
+	"github.com/go-mock-api/internal/utils/loggers"
 	"github.com/go-mock-api/internal/core/model"
+	"github.com/go-mock-api/internal/exceptions"
 )
 
+var mutex sync.Mutex
+
 type BalanceRepositoryMemKv interface {
+	FindById(ctx context.Context, id string) (model.Balance, error)
 	List(ctx context.Context) ([]model.Balance, error)
 	Save(ctx context.Context, balance model.Balance) (model.Balance, error)
 }
 
 type BalanceRepositoryMemKvImpl struct {
-	//kv map[string][]byte
+	kv map[string][]byte
 }
 
 func NewBalanceRepositoryMemKv() BalanceRepositoryMemKv {
 	return BalanceRepositoryMemKvImpl{
-	//	databaseHelper: helper,
+		kv: map[string][]byte{},
 	}
 }
 
 func (b BalanceRepositoryMemKvImpl) Save(ctx context.Context, balance model.Balance) (model.Balance, error) {
-	fmt.Println("=====www===> ",balance)
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	bytes, err := json.Marshal(balance)
+	if err != nil {
+		return model.Balance{}, exceptions.Throw(err, exceptions.ErrSaveDatabase)
+	}
+	b.kv[balance.Id] = bytes
+	loggers.GetLogger().Named(constants.Database).Info("TABLE Balance MEMKV", zap.Any("count :" ,len(b.kv)) )
+	
 	return balance , nil
 }
 
 func (b BalanceRepositoryMemKvImpl) List(ctx context.Context) ([]model.Balance, error) {
-	result := []model.Balance{}
-	m1 := model.Balance{ Id: "888"}
-	result = append(result, m1)
-	m2 := model.Balance{ Id: "777"}
-	result = append(result, m2)
+	var result []model.Balance
+	for _, value := range b.kv {
+		balance := model.Balance{}
+		err := json.Unmarshal(value, &balance)
+		if err != nil {
+			return []model.Balance{}, exceptions.Throw(err, exceptions.ErrList)
+		}
+		result = append(result, balance)
+	}
+	return result ,nil
+}
 
-	return result , nil
+func (b BalanceRepositoryMemKvImpl) FindById(ctx context.Context, id string) (model.Balance, error) {
+	if value, ok := b.kv[id]; ok {
+		balance := model.Balance{}
+		err := json.Unmarshal(value, &balance)
+		if err != nil {
+			return model.Balance{}, exceptions.Throw(err, exceptions.ErrJsonCode)
+		}
+		return balance, nil
+	}
+	return model.Balance{}, exceptions.Throw(nil, exceptions.ErrNoDataFound)
 }

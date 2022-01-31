@@ -4,6 +4,7 @@ const (
 	Server          = "[SERVER]"
 	Viper           = "[VIPER]"
 	Router          = "[ROUTER]"
+	Database        = "[DATABASE]"
 	
 	UP              = "UP"
 	DOWN            = "DOWN"
@@ -11,6 +12,8 @@ const (
 
 	LogContext            = "logContext"
 	ContextRequest        = "CONTEXT_REQUEST"
+	
+	PathParamDefault      = "id"
 	
 	ManagementPath = "/"
 	BalancePath = "/balance"
