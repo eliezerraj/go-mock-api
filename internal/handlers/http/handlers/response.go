@@ -30,6 +30,8 @@ type ResponseHandler interface {
 	Ok(w http.ResponseWriter, data interface{})
 	InternalServerError(w http.ResponseWriter, data interface{})
 	Exception(w http.ResponseWriter, r *http.Request, err error)
+	BadRequest(w http.ResponseWriter, r *http.Request, err error)
+
 }
 
 func GetResponseHandlersInstance() ResponseHandler {
@@ -48,8 +50,12 @@ func (h ResponseHandlerImpl) InternalServerError(w http.ResponseWriter, data int
 	response(w, data, http.StatusInternalServerError)
 }
 
+func (h ResponseHandlerImpl) BadRequest(w http.ResponseWriter, r *http.Request, err error) {
+	data := h.GetResponseError(r, err)
+	response(w, data, http.StatusBadRequest)
+}
+
 func (h ResponseHandlerImpl) Exception(w http.ResponseWriter, r *http.Request, err error) {
-//	fmt.Println("===err=====>",err)
 	httpError := exceptions.GetHttpError(err)
 //	fmt.Println("=========>",httpError)
 /*	logContext, valid := utils.FindToContext(r.Context(), constants.LogContext).(*loggers.LogContext)
@@ -94,4 +100,9 @@ func response(w http.ResponseWriter, data interface{}, httpStatus int) {
 			_, _ = w.Write(bytes)
 		}
 	}
+}
+
+func (h ResponseHandlerImpl) GetResponseError(r *http.Request, err error) exceptions.ErrorResponse {
+	httpError := exceptions.GetHttpError(err)
+	return exceptions.NewErrorResponse("", httpError.Exception.Error(), httpError.Code)
 }

@@ -56,6 +56,7 @@ var (
 	ErrJsonCode            = Exception(errors.New("ERROR => could not convert json to data"))
 	ErrSaveDatabase 	   = Exception(errors.New("ERROR => could not save data to database"))
 	ErrNoDataFound 		   = Exception(errors.New("ERROR => no data found with parameters informed"))
+	ErrTokenUnreachable    = Exception(errors.New("ERROR => unable to access the token"))
 )
 
 var httpErrorList = [...]HttpError{
@@ -66,6 +67,7 @@ var httpErrorList = [...]HttpError{
 	{Exception: ErrJsonCode, HttpStatusCode: 500, Code: SystemErrorCode},
 	{Exception: ErrSaveDatabase, HttpStatusCode: 500, Code: SystemErrorCode},
 	{Exception: ErrNoDataFound, HttpStatusCode: 404, Code: SystemErrorCode},
+	{Exception: ErrTokenUnreachable, HttpStatusCode: 401, Code: SystemErrorCode},
 }
 
 func Throw(old error, new error) error {

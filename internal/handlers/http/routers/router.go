@@ -49,7 +49,7 @@ func (c *ControllerImpl) BalanceController() controllers.Balance {
 	return controllers.NewBalanceController(handlers.GetRequestHandlersInstance(), 
 											handlers.GetResponseHandlersInstance(),
 											c.container.BalanceService,
-											middleware.NewValidatorMiddleware(),
+											middleware.NewValidatorMiddleware(handlers.GetResponseHandlersInstance()),
 										)
 }
 
