@@ -8,6 +8,8 @@ const (
 	ServiceBalance  = "[SERVICE]"
 	Controller  	= "[CONTROLLER]"
 	
+	Authorization   = "Authorization"
+
 	UP              = "UP"
 	DOWN            = "DOWN"
 	NO_DEPLOY         = "NO_DEPLOYED"
