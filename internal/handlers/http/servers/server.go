@@ -3,7 +3,11 @@ package http_servers
 import (
 	"time"
 	"net/http"
-	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+	"context"
+	"strconv"
 
 	"go.uber.org/zap"
 
@@ -18,14 +22,11 @@ type HttpServer struct {
 	start time.Time
 }
 
-// NewHttpServer :
 func NewHttpServer(start time.Time) HttpServer {
 	return HttpServer{start: start}
 }
 
-// StartHttpServer :
 func (s HttpServer) StartHttpServer() {
-
 	loggers.GetLogger().Named(constants.Server).Info("Start server HTTP")
 
 	r := routers.NewRouter()
@@ -36,8 +37,33 @@ func (s HttpServer) StartHttpServer() {
 	loggers.GetLogger().Named(constants.Server).Info("Server booting",zap.Int("port", viper.Application.Server.Port))
 	loggers.GetLogger().Named(constants.Server).Info("Server HTTP started",	zap.Int64("duration", duration))
 	
-	e := http.ListenAndServe(fmt.Sprintf(":%d", viper.Application.Server.Port), r.Router)
-	if e != nil {
-		loggers.GetLogger().Named(constants.Server).Panic("Internal error",	zap.Error(e))
+	srv := http.Server{
+		Addr:         ":" +  strconv.Itoa(viper.Application.Server.Port),      	
+		Handler:      r.Router,                	          
+		ReadTimeout:  time.Duration(viper.Application.Server.ReadTimeout) * time.Second,   
+		WriteTimeout: time.Duration(viper.Application.Server.WriteTimeout) * time.Second,  
+		IdleTimeout:  time.Duration(viper.Application.Server.IdleTimeout) * time.Second, 
 	}
+
+	go func() {
+		err := srv.ListenAndServe()
+		if err != nil {
+			loggers.GetLogger().Named(constants.Server).Panic("Internal error",	zap.Error(err))
+		}
+	}()
+
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+	<-ch
+
+	loggers.GetLogger().Named(constants.Server).Info("Stopping Server")
+
+	ctx , cancel := context.WithTimeout(context.Background(), time.Duration(viper.Application.Server.CtxTimeout) * time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil && err != http.ErrServerClosed {
+		loggers.GetLogger().Named(constants.Server).Info("WARNING Dirty Shutdown", zap.Error(err))
+		return
+	}
+	loggers.GetLogger().Named(constants.Server).Info("Stop DONE !")
 }
