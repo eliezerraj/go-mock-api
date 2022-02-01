@@ -44,14 +44,7 @@ func (m Management) checkHealth(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (m Management) getInfo(w http.ResponseWriter, _ *http.Request) {
-	result := model.ManagerInfo{
-		App: &model.ManagerInfoApp{
-			Name:        viper.Application.App.Name,
-			Description: viper.Application.App.Description,
-			Version:     viper.Application.App.Version,
-		},
-	}
-	m.responseHandlers.Ok(w, result)
+	m.responseHandlers.Ok(w, viper.Application)
 }
 //-----------------------------
 func ToManagerHealthDBResponse(m model.ManagerHealthDB) model.ManagerHealthDB {
