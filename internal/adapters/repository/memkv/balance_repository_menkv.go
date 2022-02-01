@@ -12,6 +12,7 @@ import (
 	"github.com/go-mock-api/internal/utils/loggers"
 	"github.com/go-mock-api/internal/core/model"
 	"github.com/go-mock-api/internal/exceptions"
+	"github.com/go-mock-api/internal/adapters/repository"
 )
 
 var mutex sync.Mutex
@@ -26,7 +27,7 @@ type BalanceRepositoryMemKvImpl struct {
 	kv map[string][]byte
 }
 
-func NewBalanceRepositoryMemKv() BalanceRepositoryMemKv {
+func NewBalanceRepositoryMemKv() repository.BalanceRepository {
 	return BalanceRepositoryMemKvImpl{
 		kv: map[string][]byte{},
 	}
