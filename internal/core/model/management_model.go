@@ -1,13 +1,16 @@
 package model
 
 type ManagerInfo struct {
-	App *ManagerInfoApp `json:"app"`
+	App 		*ManagerInfoApp `json:"app"`
+	Server     	Server     		`json:"servers"`
 }
 
 type ManagerInfoApp struct {
 	Name 				string `json:"name"`
 	Description 		string `json:"description"`
 	Version 			string `json:"version"`
+	Random				bool   `json:"random"`
+	Lag					uint64 `json:"lag"`
 }
 
 type ManagerHealthDiskSpace struct {
@@ -25,4 +28,12 @@ type ManagerHealth struct {
 
 type ManagerHealthDB struct {
 	Status string `json:"status"`
+}
+
+type Server struct {
+	Port 			int `json:"port"`
+	ReadTimeout		int `json:"readTimeout"`
+	WriteTimeout	int `json:"writeTimeout"`
+	IdleTimeout		int `json:"idleTimeout"`
+	CtxTimeout		int `json:"ctxTimeout"`
 }
