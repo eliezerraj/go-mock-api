@@ -6,12 +6,12 @@ import (
 
 	"github.com/go-mock-api/internal/utils/constants"
 	"github.com/go-mock-api/internal/utils/loggers"
-	"github.com/go-mock-api/internal/viper/model"
+	"github.com/go-mock-api/internal/core/model"
 
 )
 
 var (
-	Application model.Application
+	Application model.ManagerInfo
 	Viper *viper.Viper
 )
 
@@ -23,7 +23,7 @@ const (
 
 //Configuration godoc
 func Configuration() {
-	var app model.Application
+	var app model.ManagerInfo
 
 	viper.SetConfigName(_applicationFileName)
 	viper.SetConfigType(_extension)
@@ -34,7 +34,6 @@ func Configuration() {
 	if errUnmarshal != nil {
 		loggers.GetLogger().Named(constants.Viper).Panic("Parse error for application structure", zap.Error(errUnmarshal))
 	}
-
 	loggers.GetLogger().Named(constants.Viper).Info("Data APPLICATION.YML => ",zap.Any("name : ", app))
 
 	Application = app
