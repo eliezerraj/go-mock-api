@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-mock-api/internal/utils/constants"
 	"github.com/go-mock-api/internal/handlers/http/handlers"
+	"github.com/go-mock-api/internal/handlers/http/middleware"
 	"github.com/go-mock-api/internal/core/model"
 	"github.com/go-mock-api/internal/services"
 	"github.com/go-mock-api/internal/utils/loggers"
@@ -17,14 +18,18 @@ type Balance struct {
 	requestHandlers  handlers.RequestHandlers
 	responseHandlers handlers.ResponseHandler
 	service          services.BalanceService
+	validator    	 middleware.ValidatorMiddleware
 }
 
 func NewBalanceController(	requestHandlers handlers.RequestHandlers,
 							responseHandlers handlers.ResponseHandler,
-							service services.BalanceService ) Balance {
+							service services.BalanceService,
+							validator middleware.ValidatorMiddleware,
+							 ) Balance {
 		return Balance{	requestHandlers:  requestHandlers,
 						responseHandlers: responseHandlers,
 						service:          service,
+						validator:    	  validator,
 						}		
 }
 
@@ -33,6 +38,7 @@ func (b Balance) GetPath() string {
 }
 
 func (b Balance) Route(r chi.Router) {
+	r.Use(b.validator.Validate())
 	r.Get("/list", b.listBalance)
 	r.Post("/save", b.saveBalance)
 	r.Route("/id={id}", func(rRouter chi.Router) {

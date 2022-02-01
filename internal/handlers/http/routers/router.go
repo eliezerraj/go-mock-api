@@ -7,12 +7,14 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/rs/cors"
+	"github.com/go-chi/render"
 
 	"github.com/go-mock-api/internal/utils/loggers"
 	"github.com/go-mock-api/internal/utils/constants"
 	"github.com/go-mock-api/internal/handlers/http/routers/controllers"
 	"github.com/go-mock-api/internal/handlers/http/handlers"
 	"github.com/go-mock-api/internal/container"
+	"github.com/go-mock-api/internal/handlers/http/middleware"
 
 )
 
@@ -46,7 +48,9 @@ func (c *ControllerImpl) ManagerController() controllers.Management {
 func (c *ControllerImpl) BalanceController() controllers.Balance {
 	return controllers.NewBalanceController(handlers.GetRequestHandlersInstance(), 
 											handlers.GetResponseHandlersInstance(),
-											c.container.BalanceService)
+											c.container.BalanceService,
+											middleware.NewValidatorMiddleware(),
+										)
 }
 
 //------------------------------------
@@ -113,6 +117,7 @@ func (c ChiRouter) configurationRouters() {
 	c.Router.Use(c.Cors())
 
 	c.Router.Group(func(rManager chi.Router) {
+		rManager.Use(render.SetContentType(render.ContentTypeJSON))
 		for _, router := range c.managerRouters {
 			loggers.GetLogger().Named(constants.Router).Info(fmt.Sprintf("Router %s created", router.GetPath()))
 			rManager.Route(router.GetPath(), router.Route)
@@ -120,6 +125,7 @@ func (c ChiRouter) configurationRouters() {
 	})
 
 	c.Router.Group(func(rService chi.Router) {
+		rService.Use(render.SetContentType(render.ContentTypeJSON))
 		for _, router := range c.serviceRouters {
 			loggers.GetLogger().Named(constants.Router).Info(fmt.Sprintf("Router %s created", router.GetPath()))
 			rService.Route(router.GetPath(), router.Route)
