@@ -7,7 +7,6 @@ import (
 
 )
 
-// ServerConfiguration :
 func ServerConfiguration(start time.Time) {
 	httpServer := _server.NewHttpServer(start)
 	httpServer.StartHttpServer()
