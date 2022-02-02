@@ -10,6 +10,8 @@ import (
 	"github.com/go-mock-api/internal/handlers/http/handlers"
 	"github.com/go-mock-api/internal/core/model"
 	"github.com/go-mock-api/internal/services"
+	"github.com/go-mock-api/internal/exceptions"
+	"github.com/go-mock-api/internal/utils/loggers"
 
 )
 
@@ -32,9 +34,11 @@ func (m Management) GetPath() string {
 func (m Management) Route(r chi.Router) {
 	r.Get("/health", m.checkHealth)
 	r.Get("/info", m.getInfo)
+	r.Post("/cpu", m.cpuStress)
 }
 
 func (m Management) checkHealth(w http.ResponseWriter, _ *http.Request) {
+	loggers.GetLogger().Named(constants.Controller).Info("checkHealth") 
 	result := services.CheckHealth()
 	if result.Status != constants.UP {
 		m.responseHandlers.InternalServerError(w, result)
@@ -44,8 +48,26 @@ func (m Management) checkHealth(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (m Management) getInfo(w http.ResponseWriter, _ *http.Request) {
+	loggers.GetLogger().Named(constants.Controller).Info("getInfo") 
 	m.responseHandlers.Ok(w, viper.Application)
 }
+
+/*{
+    "count":20000
+}*/
+func (m Management) cpuStress(w http.ResponseWriter, r *http.Request) {
+	loggers.GetLogger().Named(constants.Controller).Info("cpuStress") 
+	var setup model.Setup
+	err := m.requestHandlers.BindJson(r, &setup)
+	if err != nil {
+		m.responseHandlers.Exception(w, r, exceptions.Throw(exceptions.ErrContentNotEmpty, exceptions.ErrContentNotEmpty))
+		return
+	}
+
+	result := services.CpuStress(setup.Count)
+	m.responseHandlers.Ok(w, result)
+}
+
 //-----------------------------
 func ToManagerHealthDBResponse(m model.ManagerHealthDB) model.ManagerHealthDB {
 	return model.ManagerHealthDB{

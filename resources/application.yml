@@ -3,8 +3,6 @@ app:
   name: "API-MOCK"
   description: "API mock for test"
   version: "1.0"
-  random: "true"
-  lag: 5
 
 server:
   port: 8900
@@ -12,3 +10,9 @@ server:
   writeTimeout: 60
   idleTimeout: 60
   ctxTimeout: 60
+
+setup:
+  responseTime: 8900
+  responseStatusCode: 200
+  isRandomTime: 60
+  count: 0

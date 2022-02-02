@@ -3,14 +3,13 @@ package model
 type ManagerInfo struct {
 	App 		*ManagerInfoApp `json:"app"`
 	Server     	Server     		`json:"servers"`
+	Setup		Setup			`json:"setup_behaviour"`
 }
 
 type ManagerInfoApp struct {
 	Name 				string `json:"name"`
 	Description 		string `json:"description"`
 	Version 			string `json:"version"`
-	Random				bool   `json:"random"`
-	Lag					uint64 `json:"lag"`
 }
 
 type ManagerHealthDiskSpace struct {
@@ -36,4 +35,11 @@ type Server struct {
 	WriteTimeout	int `json:"writeTimeout"`
 	IdleTimeout		int `json:"idleTimeout"`
 	CtxTimeout		int `json:"ctxTimeout"`
+}
+
+type Setup struct {
+    ResponseTime 		int `json:"response_time"`
+    ResponseStatusCode  int `json:"response_status_code"`
+	IsRandomTime		bool `json:"is_random_time"`
+	Count				int `json:"count"`
 }
