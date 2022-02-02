@@ -35,6 +35,7 @@ func (m Management) Route(r chi.Router) {
 	r.Get("/health", m.checkHealth)
 	r.Get("/info", m.getInfo)
 	r.Post("/cpu", m.cpuStress)
+	r.Post("/setup", m.setup)
 }
 
 func (m Management) checkHealth(w http.ResponseWriter, _ *http.Request) {
@@ -49,6 +50,18 @@ func (m Management) checkHealth(w http.ResponseWriter, _ *http.Request) {
 
 func (m Management) getInfo(w http.ResponseWriter, _ *http.Request) {
 	loggers.GetLogger().Named(constants.Controller).Info("getInfo") 
+	m.responseHandlers.Ok(w, viper.Application)
+}
+
+func (m Management) setup(w http.ResponseWriter, r *http.Request) {
+	loggers.GetLogger().Named(constants.Controller).Info("setup") 
+	var setup model.Setup
+	err := m.requestHandlers.BindJson(r, &setup)
+	if err != nil {
+		m.responseHandlers.Exception(w, r, exceptions.Throw(exceptions.ErrContentNotEmpty, exceptions.ErrContentNotEmpty))
+		return
+	}
+	viper.Application.Setup = setup
 	m.responseHandlers.Ok(w, viper.Application)
 }
 

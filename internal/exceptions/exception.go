@@ -58,6 +58,7 @@ var (
 	ErrNoDataFound 		   = Exception(errors.New("ERROR => no data found with parameters informed"))
 	ErrTokenUnreachable    = Exception(errors.New("ERROR => unable to access the token"))
 	ErrContentNotEmpty     = Exception(errors.New("ERROR => content can not be empty"))
+	ErrEnforced		       = Exception(errors.New("ERROR => enforced error"))
 )
 
 var httpErrorList = [...]HttpError{
@@ -70,6 +71,7 @@ var httpErrorList = [...]HttpError{
 	{Exception: ErrNoDataFound, HttpStatusCode: 404, Code: SystemErrorCode},
 	{Exception: ErrTokenUnreachable, HttpStatusCode: 401, Code: SystemErrorCode},
 	{Exception: ErrContentNotEmpty, HttpStatusCode: 400, Code: SystemErrorCode},
+	{Exception: ErrEnforced, HttpStatusCode: 500, Code: SystemErrorCode},
 }
 
 func Throw(old error, new error) error {

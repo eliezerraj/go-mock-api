@@ -116,6 +116,8 @@ func (c ChiRouter) configurationRouters() {
 
 	c.Router.Use(c.Cors())
 
+	managementMiddleware := middleware.NewManagementMiddleware(handlers.GetResponseHandlersInstance())
+
 	c.Router.Group(func(rManager chi.Router) {
 		rManager.Use(render.SetContentType(render.ContentTypeJSON))
 		for _, router := range c.managerRouters {
@@ -126,6 +128,7 @@ func (c ChiRouter) configurationRouters() {
 
 	c.Router.Group(func(rService chi.Router) {
 		rService.Use(render.SetContentType(render.ContentTypeJSON))
+		rService.Use(managementMiddleware.Management)
 		for _, router := range c.serviceRouters {
 			loggers.GetLogger().Named(constants.Router).Info(fmt.Sprintf("Router %s created", router.GetPath()))
 			rService.Route(router.GetPath(), router.Route)
