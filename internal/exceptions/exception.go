@@ -69,7 +69,7 @@ var httpErrorList = [...]HttpError{
 	{Exception: ErrJsonCode, HttpStatusCode: 500, Code: SystemErrorCode},
 	{Exception: ErrSaveDatabase, HttpStatusCode: 500, Code: SystemErrorCode},
 	{Exception: ErrNoDataFound, HttpStatusCode: 404, Code: SystemErrorCode},
-	{Exception: ErrTokenUnreachable, HttpStatusCode: 401, Code: SystemErrorCode},
+	{Exception: ErrTokenUnreachable, HttpStatusCode: 400, Code: SystemErrorCode},
 	{Exception: ErrContentNotEmpty, HttpStatusCode: 400, Code: SystemErrorCode},
 	{Exception: ErrEnforced, HttpStatusCode: 500, Code: SystemErrorCode},
 }
