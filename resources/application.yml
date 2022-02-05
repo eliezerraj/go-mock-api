@@ -16,3 +16,8 @@ setup:
   responseStatusCode: 200
   isRandomTime: 60
   count: 0
+
+awsenv:
+  aws_region: "us-east-1"
+  aws_access_id: "qqq"
+  aws_access_secret: "aaaa"

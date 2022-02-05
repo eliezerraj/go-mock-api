@@ -2,13 +2,11 @@ package services
 
 import (
 	"context"
-
 	"github.com/go-mock-api/internal/core/model"
 	"github.com/go-mock-api/internal/adapters/repository"
 	"github.com/go-mock-api/internal/exceptions"
 	"github.com/go-mock-api/internal/utils/constants"
 	"github.com/go-mock-api/internal/utils/loggers"
-
 )
 
 type BalanceService interface {

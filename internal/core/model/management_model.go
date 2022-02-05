@@ -4,6 +4,7 @@ type ManagerInfo struct {
 	App 		*ManagerInfoApp `json:"app"`
 	Server     	Server     		`json:"servers"`
 	Setup		Setup			`json:"setup_behaviour"`
+	AwsEnv		AwsEnv			`json:"aws_env"`
 }
 
 type ManagerInfoApp struct {
@@ -42,4 +43,10 @@ type Setup struct {
     ResponseStatusCode  int `json:"response_status_code"`
 	IsRandomTime		bool `json:"is_random_time"`
 	Count				int `json:"count"`
+}
+
+type AwsEnv struct {
+    Aws_region 			string `json:"aws_region"`
+    Aws_access_id  		string `json:"aws_access_id"`
+	Aws_access_secret	string `json:"aws_access_secret"`
 }

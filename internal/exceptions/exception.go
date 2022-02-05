@@ -59,6 +59,7 @@ var (
 	ErrTokenUnreachable    = Exception(errors.New("ERROR => unable to access the token"))
 	ErrContentNotEmpty     = Exception(errors.New("ERROR => content can not be empty"))
 	ErrEnforced		       = Exception(errors.New("ERROR => enforced error"))
+	ErrOpenDataBase		   = Exception(errors.New("ERROR => unable to open database"))
 )
 
 var httpErrorList = [...]HttpError{
@@ -72,6 +73,7 @@ var httpErrorList = [...]HttpError{
 	{Exception: ErrTokenUnreachable, HttpStatusCode: 400, Code: SystemErrorCode},
 	{Exception: ErrContentNotEmpty, HttpStatusCode: 400, Code: SystemErrorCode},
 	{Exception: ErrEnforced, HttpStatusCode: 500, Code: SystemErrorCode},
+	{Exception: ErrOpenDataBase, HttpStatusCode: 500, Code: SystemErrorCode},
 }
 
 func Throw(old error, new error) error {
