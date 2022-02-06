@@ -11,7 +11,6 @@ import (
 	"github.com/go-mock-api/internal/core/model"
 	"github.com/go-mock-api/internal/services"
 	"github.com/go-mock-api/internal/utils/loggers"
-
 )
 
 type Balance struct {
@@ -40,6 +39,9 @@ func (b Balance) GetPath() string {
 func (b Balance) Route(r chi.Router) {
 	r.Use(b.validator.Validate())
 	r.Get("/list", b.listBalance)
+	r.Route("/list_by_id/id={id}&sk={sk}", func(rRouter chi.Router) {
+		rRouter.Get("/", b.listById)
+	})
 	r.Post("/save", b.saveBalance)
 	r.Route("/id={id}", func(rRouter chi.Router) {
 		rRouter.Get("/", b.findById)
@@ -84,6 +86,25 @@ func (b Balance) findById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	b.responseHandlers.Ok(w, ToBalanceResponse(result))
+}
+
+func (b Balance) listById(w http.ResponseWriter, r *http.Request) {
+	loggers.GetLogger().Named(constants.Controller).Info("listById") 
+
+	id := b.requestHandlers.GetURLParam(r, constants.PathParamDefault)
+	sk := b.requestHandlers.GetURLParam(r, constants.PathParamSk)
+
+	balance := model.Balance{}
+	balance.Id = id
+	balance.Account = sk
+
+	result, err := b.service.ListById(r.Context(), balance)
+	
+	if err != nil {
+		b.responseHandlers.Exception(w, r, err)
+		return
+	}
+	b.responseHandlers.Ok(w, ToBalanceListResponse(result))
 }
 
 //-----------------------

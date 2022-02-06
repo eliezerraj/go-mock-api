@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+
 	"github.com/go-mock-api/internal/core/model"
 	"github.com/go-mock-api/internal/adapters/repository"
 	"github.com/go-mock-api/internal/exceptions"
@@ -11,6 +12,7 @@ import (
 
 type BalanceService interface {
 	List(ctx context.Context) ([]model.Balance, error)
+	ListById(ctx context.Context, balance model.Balance) ([]model.Balance, error)
 	Save(ctx context.Context, balance model.Balance) (model.Balance, error)
 	FindById(ctx context.Context, id string) (model.Balance, error)
 }
@@ -48,6 +50,15 @@ func (t BalanceServiceImpl) FindById(ctx context.Context, id string) (model.Bala
 	result, err := t.repository.FindById(ctx, id)
 	if err != nil {
 		return model.Balance{} , exceptions.Throw(err, exceptions.ErrNoDataFound)
+	}
+	return result, nil
+}
+
+func (t BalanceServiceImpl) ListById(ctx context.Context, balance model.Balance) ([]model.Balance, error) {
+	loggers.GetLogger().Named(constants.Service).Info("ListById") 
+	result, err := t.repository.ListById(ctx, balance)
+	if err != nil {
+		return []model.Balance{} , exceptions.Throw(err, exceptions.ErrNoDataFound)
 	}
 	return result, nil
 }

@@ -4,15 +4,9 @@ import (
 	"net/http"
 	"encoding/json"
 	"sync"
-//	"strconv"
-//"fmt"
+	"fmt"
 
 	"github.com/go-mock-api/internal/exceptions"
-//	"github.com/go-mock-api/internal/utils"
-//	"github.com/go-mock-api/internal/utils/loggers"
-//	"github.com/go-mock-api/internal/utils/constants"
-//	"github.com/go-mock-api/internal/core/model"
-
 )
 
 var (
@@ -57,26 +51,8 @@ func (h ResponseHandlerImpl) BadRequest(w http.ResponseWriter, r *http.Request, 
 
 func (h ResponseHandlerImpl) Exception(w http.ResponseWriter, r *http.Request, err error) {
 	httpError := exceptions.GetHttpError(err)
-//	fmt.Println("=========>",httpError)
-/*	logContext, valid := utils.FindToContext(r.Context(), constants.LogContext).(*loggers.LogContext)
-	if valid {
-		logContext.StackTrace = httpError.StackTracer()
-		utils.AddToContext(r.Context(), constants.LogContext, &logContext)
-	} else {
-		loggers.GetLogger().Warn("Invalid context founded 1")
-	}
+	fmt.Println("=========>",httpError)
 
-	var requestId string
-	ctxRequest, ctxValid := utils.FindToContext(r.Context(), constants.ContextRequest).(model.ContextRequest)
-	if !ctxValid {
-		loggers.GetLogger().Warn("Invalid context founded 2")
-	} else {
-		issuerId := ctxRequest.IssuerID
-		requestId = ctxRequest.RequestId
-		w.Header().Add("issuer_id", strconv.Itoa(int(issuerId)))
-		w.Header().Add("request_id", requestId)
-	}
-*/
 	resp := exceptions.NewErrorResponse("", httpError.Exception.Error(), httpError.Code)
 	response(w, resp, httpError.HttpStatusCode)
 }

@@ -5,9 +5,10 @@ const (
 	Viper           = "[VIPER]"
 	Router          = "[ROUTER]"
 	Database        = "[DATABASE]"
-	Service			  = "[SERVICE]"
+	Service			= "[SERVICE]"
 	Controller  	= "[CONTROLLER]"
-	
+	Container  		= "[CONTAINER]"
+
 	Authorization   = "Authorization"
 
 	UP              = "UP"
@@ -18,7 +19,8 @@ const (
 	ContextRequest        = "CONTEXT_REQUEST"
 	
 	PathParamDefault      = "id"
-	
+	PathParamSk      	  = "sk"
+
 	ManagementPath = "/"
 	BalancePath = "/balance"
 )

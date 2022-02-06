@@ -19,6 +19,7 @@ var mutex sync.Mutex
 
 type BalanceRepositoryMemKv interface {
 	FindById(ctx context.Context, id string) (model.Balance, error)
+	ListById(ctx context.Context, balance model.Balance) ([]model.Balance, error)
 	List(ctx context.Context) ([]model.Balance, error)
 	Save(ctx context.Context, balance model.Balance) (model.Balance, error)
 }
@@ -40,7 +41,7 @@ func (b BalanceRepositoryMemKvImpl) Save(ctx context.Context, balance model.Bala
 
 	bytes, err := json.Marshal(balance)
 	if err != nil {
-		return model.Balance{}, exceptions.Throw(err, exceptions.ErrSaveDatabase)
+		return model.Balance{}, exceptions.Throw(exceptions.ErrSaveDatabase, err )
 	}
 	b.kv[balance.Id] = bytes
 	loggers.GetLogger().Named(constants.Database).Info("TABLE Balance MEMKV", zap.Any("count :" ,len(b.kv)) )
@@ -55,7 +56,21 @@ func (b BalanceRepositoryMemKvImpl) List(ctx context.Context) ([]model.Balance, 
 		balance := model.Balance{}
 		err := json.Unmarshal(value, &balance)
 		if err != nil {
-			return []model.Balance{}, exceptions.Throw(err, exceptions.ErrList)
+			return []model.Balance{}, exceptions.Throw(exceptions.ErrList, err)
+		}
+		result = append(result, balance)
+	}
+	return result, nil
+}
+
+func (b BalanceRepositoryMemKvImpl) ListById(ctx context.Context, balance model.Balance) ([]model.Balance, error) {
+	loggers.GetLogger().Named(constants.Database).Info("ListById") 
+	var result []model.Balance
+	for _, value := range b.kv {
+		balance := model.Balance{}
+		err := json.Unmarshal(value, &balance)
+		if err != nil {
+			return []model.Balance{}, exceptions.Throw(exceptions.ErrList, err)
 		}
 		result = append(result, balance)
 	}
@@ -68,7 +83,7 @@ func (b BalanceRepositoryMemKvImpl) FindById(ctx context.Context, id string) (mo
 		balance := model.Balance{}
 		err := json.Unmarshal(value, &balance)
 		if err != nil {
-			return model.Balance{}, exceptions.Throw(err, exceptions.ErrJsonCode)
+			return model.Balance{}, exceptions.Throw(exceptions.ErrJsonCode, err )
 		}
 		return balance, nil
 	}
