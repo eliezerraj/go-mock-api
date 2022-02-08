@@ -12,12 +12,13 @@ server:
   ctxTimeout: 60
 
 setup:
+  databaseType: "dynamo"
   responseTime: 8900
   responseStatusCode: 200
   isRandomTime: 60
   count: 0
 
 awsenv:
-  aws_region: "us-east-1"
-  aws_access_id: "qqq"
-  aws_access_secret: "aaaa"
+  aws_region: 
+  aws_access_id: 
+  aws_access_secret: 

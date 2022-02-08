@@ -43,6 +43,7 @@ type Setup struct {
     ResponseStatusCode  int `json:"response_status_code"`
 	IsRandomTime		bool `json:"is_random_time"`
 	Count				int `json:"count"`
+	DatabaseType		string  `json:"databaseType"`
 }
 
 type AwsEnv struct {

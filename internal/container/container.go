@@ -13,6 +13,7 @@ import (
 	"github.com/go-mock-api/internal/exceptions"
 	"github.com/go-mock-api/internal/utils/constants"
 	"github.com/go-mock-api/internal/utils/loggers"
+	"github.com/go-mock-api/internal/viper"
 )
 
 var container *ServiceContainer
@@ -28,10 +29,9 @@ func Container() *ServiceContainer {
 	loggers.GetLogger().Named(constants.Container).Info("Container") 
 
 	once.Do(func() {
-		var db_type = "dynamo"
 		var db_repo repository.BalanceRepository
 		
-		if db_type == "dynamo" {
+		if viper.Application.Setup.DatabaseType == "dynamo" {
 			table_name := "balance"
 			_db_repo, err := dynamoDB.NewBalanceRepositoryDynamoDB(table_name)
 			db_repo = _db_repo
