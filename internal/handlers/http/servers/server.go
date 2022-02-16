@@ -15,7 +15,6 @@ import (
 	"github.com/go-mock-api/internal/utils/constants"
 	"github.com/go-mock-api/internal/handlers/http/routers"
 	"github.com/go-mock-api/internal/viper"
-
 )
 
 type HttpServer struct {
@@ -57,6 +56,8 @@ func (s HttpServer) StartHttpServer() {
 	<-ch
 
 	loggers.GetLogger().Named(constants.Server).Info("Stopping Server")
+
+	r.ShutdownControllers()
 
 	ctx , cancel := context.WithTimeout(context.Background(), time.Duration(viper.Application.Server.CtxTimeout) * time.Second)
 	defer cancel()

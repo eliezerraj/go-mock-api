@@ -5,6 +5,7 @@ type ManagerInfo struct {
 	Server     	Server     		`json:"servers"`
 	Setup		Setup			`json:"setup_behaviour"`
 	AwsEnv		AwsEnv			`json:"aws_env"`
+	DatabaseRDS DatabaseRDS		`json:"database_rds"`
 }
 
 type ManagerInfoApp struct {
@@ -50,4 +51,16 @@ type AwsEnv struct {
     Aws_region 			string `json:"aws_region"`
     Aws_access_id  		string `json:"aws_access_id"`
 	Aws_access_secret	string `json:"aws_access_secret"`
+}
+
+type DatabaseRDS struct {
+    Host 				string `json:"host"`
+    Port  				string `json:"port"`
+	Schema				string `json:"schema"`
+	DatabaseName		string `json:"databaseName"`
+	User				string `json:"user"`
+	Password			string `json:"password"`
+	Db_timeout			int	`json:"db_timeout"`
+	Postgres_Driver		string `json:"postgres_driver"`
+	
 }

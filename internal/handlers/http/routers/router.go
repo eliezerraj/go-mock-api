@@ -15,7 +15,6 @@ import (
 	"github.com/go-mock-api/internal/handlers/http/handlers"
 	"github.com/go-mock-api/internal/container"
 	"github.com/go-mock-api/internal/handlers/http/middleware"
-
 )
 
 //----------------------------------------
@@ -32,6 +31,7 @@ type ControllerImpl struct {
 }
 
 func GetInstance() Controller {
+	loggers.GetLogger().Named(constants.Router).Info(" ==> GetInstance() Controller")
 	once.Do(func() {
 		controller = &ControllerImpl{
 			container: container.Container(),
@@ -49,8 +49,7 @@ func (c *ControllerImpl) BalanceController() controllers.Balance {
 	return controllers.NewBalanceController(handlers.GetRequestHandlersInstance(), 
 											handlers.GetResponseHandlersInstance(),
 											c.container.BalanceService,
-											middleware.NewValidatorMiddleware(handlers.GetResponseHandlersInstance()),
-										)
+											middleware.NewValidatorMiddleware(handlers.GetResponseHandlersInstance()))
 }
 
 //------------------------------------
@@ -65,6 +64,7 @@ type RouterComponent struct {
 }
 
 func NewRouterComponent() RouterComponent {
+	loggers.GetLogger().Named(constants.Router).Info("NewRouterComponent")
 	return RouterComponent{
 		Management: GetInstance().ManagerController(),
 		Balance: 	GetInstance().BalanceController(),
@@ -78,6 +78,7 @@ type ChiRouter struct {
 }
 
 func NewRouter() ChiRouter {
+	loggers.GetLogger().Named(constants.Router).Info("NewRouter")
 	chiRouter := ChiRouter{Router: chi.NewRouter()}
 
 	chiRouter.initializeControllers()
@@ -87,12 +88,12 @@ func NewRouter() ChiRouter {
 }
 
 func (c *ChiRouter) initializeControllers() {
+	loggers.GetLogger().Named(constants.Router).Info("initializeControllers")
 	routes := NewRouterComponent()
 
 	c.managerRouters = []Router{
 		routes.Management,
 	}
-
 	c.serviceRouters = []Router{
 		routes.Balance,
 	}
@@ -112,10 +113,9 @@ func (c ChiRouter) Cors() func(next http.Handler) http.Handler {
 }
 
 func (c ChiRouter) configurationRouters() {
-	loggers.GetLogger().Named(constants.Router).Info("Creating routers")
+	loggers.GetLogger().Named(constants.Router).Info("configurationRouters")
 
 	c.Router.Use(c.Cors())
-
 	managementMiddleware := middleware.NewManagementMiddleware(handlers.GetResponseHandlersInstance())
 
 	c.Router.Group(func(rManager chi.Router) {
@@ -134,5 +134,8 @@ func (c ChiRouter) configurationRouters() {
 			rService.Route(router.GetPath(), router.Route)
 		}
 	})
+}
 
+func (c *ChiRouter) ShutdownControllers() {
+	container.Acontainer.ContainerShutdown()
 }

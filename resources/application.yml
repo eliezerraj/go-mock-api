@@ -12,13 +12,23 @@ server:
   ctxTimeout: 60
 
 setup:
-  databaseType: "dynamo"
+  databaseType: "rds"
   responseTime: 8900
   responseStatusCode: 200
   isRandomTime: 60
   count: 0
 
+databaseRDS:
+    host: 127.0.0.1
+    port: 5432
+    schema: public
+    user: admin
+    password: admin
+    databaseName: postgres
+    db_timeout: 90
+    postgres_driver: postgres
+
 awsenv:
-  aws_region: 
-  aws_access_id:
-  aws_access_secret: 
+  aws_region: ""
+  aws_access_id: ""
+  aws_access_secret: ""
