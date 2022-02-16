@@ -1,0 +1,23 @@
+# docker build -t go_mock_api . -f Dockerfile-Builder
+# docker run -dit --name go_mock_api -p 8900:8900 go_mock_api
+
+FROM golang:1.17 As builder
+WORKDIR /app
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+RUN go mod tidy
+
+COPY . .
+WORKDIR /app/cmd
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags '-w' -o go_mock_api
+
+FROM scratch
+
+WORKDIR /app
+COPY --from=builder /app/cmd/go_mock_api .
+
+WORKDIR /app/resources
+COPY --from=builder /app/resources/application.yml .
+
+CMD ["/app/go_mock_api"]
