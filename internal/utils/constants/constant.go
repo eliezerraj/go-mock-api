@@ -8,6 +8,7 @@ const (
 	Service			= "[SERVICE]"
 	Controller  	= "[CONTROLLER]"
 	Container  		= "[CONTAINER]"
+	Config  		= "[CONFIG]"
 
 	Authorization   = "Authorization"
 

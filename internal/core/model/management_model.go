@@ -12,6 +12,8 @@ type ManagerInfoApp struct {
 	Name 				string `json:"name"`
 	Description 		string `json:"description"`
 	Version 			string `json:"version"`
+	OSPID				string `json:"os_pid"`
+	IpAdress			string `json:"ip_adress"`
 }
 
 type ManagerHealthDiskSpace struct {
