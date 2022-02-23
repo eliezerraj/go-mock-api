@@ -19,11 +19,11 @@ setup:
   count: 0
 
 databaseRDS:
-    host: 127.0.0.1
+    host: cluster-rds-test-01.cluster-ro-couoacqalfwt.us-east-2.rds.amazonaws.com
     port: 5432
     schema: public
-    user: admin
-    password: admin
+    user: postgres
+    password: admin123
     databaseName: postgres
     db_timeout: 90
     postgres_driver: postgres
