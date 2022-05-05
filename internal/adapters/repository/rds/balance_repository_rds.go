@@ -34,7 +34,7 @@ func (b BalanceRepositoryRDSImpl) Save(ctx context.Context, balance model.Balanc
 
 	client, _ := b.DatabaseHelper.GetConnection(ctx)
 
-	stmt, err := client.Prepare(`INSERT INTO balance ( balance_id, 
+	stmt, err := client.Prepare(`INSERT INTO balance2 ( balance_id, 
 														 account, 
 														 amount, 
 														 date_balance, 
