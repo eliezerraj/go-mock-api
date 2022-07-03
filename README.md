@@ -6,20 +6,20 @@ How to setup
 
 1.1 RDS 
 setup:
-  databaseType: "rds"
+  databaseType: "rds" or "dynamo" or "menkv"
   responseTime: 8900
   responseStatusCode: 200
   isRandomTime: 60
   count: 0
 
 1.2 Dynamo
+
 awsenv:
   aws_region: ""
   aws_access_id: ""
   aws_access_secret: ""
 
-
-
+1.3 MenKv
 
 GET http://localhost:8900/balance/list
 GET http://localhost:8900/balance/id=6

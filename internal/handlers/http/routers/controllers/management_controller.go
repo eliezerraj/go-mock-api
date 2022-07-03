@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi"
 
@@ -12,8 +13,9 @@ import (
 	"github.com/go-mock-api/internal/services"
 	"github.com/go-mock-api/internal/exceptions"
 	"github.com/go-mock-api/internal/utils/loggers"
-
 )
+
+var x = 0
 
 type Management struct {
 	requestHandlers  handlers.RequestHandlers
@@ -34,6 +36,7 @@ func (m Management) GetPath() string {
 func (m Management) Route(r chi.Router) {
 	r.Get("/health", m.checkHealth)
 	r.Get("/info", m.getInfo)
+	r.Get("/count", m.getCount)
 	r.Post("/cpu", m.cpuStress)
 	r.Post("/setup", m.setup)
 }
@@ -51,6 +54,13 @@ func (m Management) checkHealth(w http.ResponseWriter, _ *http.Request) {
 func (m Management) getInfo(w http.ResponseWriter, _ *http.Request) {
 	loggers.GetLogger().Named(constants.Controller).Info("getInfo") 
 	m.responseHandlers.Ok(w, viper.Application)
+}
+
+func (m Management) getCount(w http.ResponseWriter, _ *http.Request) {
+	loggers.GetLogger().Named(constants.Controller).Info("getCount") 
+	x++
+	count_x := "Count x = " + strconv.Itoa(x)
+	m.responseHandlers.Ok(w, count_x)
 }
 
 func (m Management) setup(w http.ResponseWriter, r *http.Request) {
