@@ -17,13 +17,6 @@ import (
 
 var mutex sync.Mutex
 
-type BalanceRepositoryMemKv interface {
-	FindById(ctx context.Context, id string) (model.Balance, error)
-	ListById(ctx context.Context, balance model.Balance) ([]model.Balance, error)
-	List(ctx context.Context) ([]model.Balance, error)
-	Save(ctx context.Context, balance model.Balance) (model.Balance, error)
-}
-
 type BalanceRepositoryMemKvImpl struct {
 	kv map[string][]byte
 }

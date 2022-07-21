@@ -5,7 +5,6 @@ import (
 
 	_configs "github.com/go-mock-api/internal/configs"
 	"github.com/go-mock-api/internal/viper"
-
 )
 
 func main(){

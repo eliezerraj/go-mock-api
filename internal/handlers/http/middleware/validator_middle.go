@@ -2,10 +2,10 @@ package middleware
 
 import (
 	"net/http"
-	"fmt"
+	//"fmt"
 
 	"github.com/go-mock-api/internal/exceptions"
-	"github.com/go-mock-api/internal/utils/constants"
+	//"github.com/go-mock-api/internal/utils/constants"
 	"github.com/go-mock-api/internal/handlers/http/handlers"
 
 )
@@ -27,8 +27,8 @@ func NewValidatorMiddleware(responseHandlers handlers.ResponseHandler) Validator
 func (v ValidatorMiddlewareImpl) Validate() func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			bearToken := r.Header.Get(constants.Authorization)
-			fmt.Println("bearToken :", bearToken)
+			//bearToken := r.Header.Get(constants.Authorization)
+			//fmt.Println("bearToken :", bearToken)
 			if 1==2 {
 				v.responseHandlers.BadRequest(w, r, exceptions.ErrTokenUnreachable)
 				return

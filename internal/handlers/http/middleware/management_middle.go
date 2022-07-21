@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"net/http"
-	"fmt"
+	//"fmt"
 
 	"github.com/go-mock-api/internal/exceptions"
 	"github.com/go-mock-api/internal/handlers/http/handlers"
@@ -31,7 +31,7 @@ func (m ManagementMiddlewareImpl) Management(next http.Handler) http.Handler {
 			m.responseHandlers.BadRequest(w, r, exceptions.ErrEnforced)
 			return
 		}
-		fmt.Println("OLAAAAA", viper.Application.Setup)
+		//fmt.Println("OLAAAAA", viper.Application.Setup)
 		next.ServeHTTP(w, r)
 	})
 }

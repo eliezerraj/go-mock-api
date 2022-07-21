@@ -18,7 +18,8 @@ spec:
     spec:
       containers:
       - name: go-mock-api
-        image: 908671954593.dkr.ecr.us-east-2.amazonaws.com/go_mock_api:latest
+        imagePullPolicy: Never
+        image: go_mock_api:latest
         resources:
            requests:
              cpu: 125m

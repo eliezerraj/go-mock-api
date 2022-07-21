@@ -8,6 +8,9 @@ import (
 	"syscall"
 	"context"
 	"strconv"
+	_ "net/http/pprof"
+	"fmt"
+	"sync"
 
 	"go.uber.org/zap"
 
@@ -16,6 +19,21 @@ import (
 	"github.com/go-mock-api/internal/handlers/http/routers"
 	"github.com/go-mock-api/internal/viper"
 )
+
+var wg sync.WaitGroup
+
+type DebugServer struct {
+	*http.Server
+}
+
+func NewDebugServer(address string) *DebugServer {
+	return &DebugServer{
+		&http.Server{
+			Addr:    address,
+			Handler: http.DefaultServeMux,
+		},
+	}
+}
 
 type HttpServer struct {
 	start time.Time
@@ -51,6 +69,17 @@ func (s HttpServer) StartHttpServer() {
 		}
 	}()
 
+	wg.Add(1)
+	debugServer := NewDebugServer(fmt.Sprintf("%s:%d", "127.0.0.1", 6060))
+	go func() {
+		loggers.GetLogger().Named(constants.Server).Info("Starting Server! http://localhost:6060/debug/pprof/ ")
+		err := debugServer.ListenAndServe()
+		if err != nil {
+			loggers.GetLogger().Named(constants.Server).Panic("PPROF Internal error",	zap.Error(err))
+		}
+		wg.Done()
+	}()
+	
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 	<-ch

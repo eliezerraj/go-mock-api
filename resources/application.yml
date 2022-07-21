@@ -12,7 +12,7 @@ server:
   ctxTimeout: 60
 
 setup:
-  databaseType: "rds"
+  databaseType: "menkv"
   responseTime: 8900
   responseStatusCode: 200
   isRandomTime: 60

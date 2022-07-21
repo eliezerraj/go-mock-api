@@ -25,7 +25,6 @@ type ResponseHandler interface {
 	InternalServerError(w http.ResponseWriter, data interface{})
 	Exception(w http.ResponseWriter, r *http.Request, err error)
 	BadRequest(w http.ResponseWriter, r *http.Request, err error)
-
 }
 
 func GetResponseHandlersInstance() ResponseHandler {
@@ -52,7 +51,6 @@ func (h ResponseHandlerImpl) BadRequest(w http.ResponseWriter, r *http.Request, 
 func (h ResponseHandlerImpl) Exception(w http.ResponseWriter, r *http.Request, err error) {
 	httpError := exceptions.GetHttpError(err)
 	fmt.Println("=========>",httpError)
-
 	resp := exceptions.NewErrorResponse("", httpError.Exception.Error(), httpError.Code)
 	response(w, resp, httpError.HttpStatusCode)
 }

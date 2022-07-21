@@ -12,13 +12,6 @@ import (
 	"github.com/go-mock-api/internal/adapters/repository"
 )
 
-type BalanceRepositoryRDS interface {
-	FindById(ctx context.Context, id string) (model.Balance, error)
-	ListById(ctx context.Context, balance model.Balance) ([]model.Balance, error)
-	List(ctx context.Context) ([]model.Balance, error)
-	Save(ctx context.Context, balance model.Balance) (model.Balance, error)
-}
-
 type BalanceRepositoryRDSImpl struct {
 	DatabaseHelper services.DatabaseHelper
 }
